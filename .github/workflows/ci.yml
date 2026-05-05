@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check version consistency
+        run: |
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          MANIFEST_VERSION=$(node -p "require('./public/manifest.json').version")
+          if [ "$PKG_VERSION" != "$MANIFEST_VERSION" ]; then
+            echo "Version mismatch: package.json=$PKG_VERSION, public/manifest.json=$MANIFEST_VERSION"
+            exit 1
+          fi
+          echo "Versions match: $PKG_VERSION"
+
+      - name: Build extension
+        run: pnpm build
+
+      - name: Check if release needed
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        id: release_check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          LATEST=$(gh release list --limit 1 --json tagName -q '.[0].tagName // ""')
+          if [ "$LATEST" != "v$VERSION" ]; then
+            echo "needed=true" >> $GITHUB_OUTPUT
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "needed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Zip dist
+        if: steps.release_check.outputs.needed == 'true'
+        env:
+          VERSION: ${{ steps.release_check.outputs.version }}
+        run: cd dist && zip -r "../powpow-interceptor-v${VERSION}.zip" .
+
+      - name: Create release
+        if: steps.release_check.outputs.needed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.release_check.outputs.version }}
+        run: |
+          gh release create "v${VERSION}" \
+            --generate-notes \
+            "powpow-interceptor-v${VERSION}.zip"
