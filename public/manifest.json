@@ -1,8 +1,8 @@
 {
 	"manifest_version": 3,
 	"name": "PowPow Interceptor",
-	"version": "1.0.0",
-	"description": "Replace Power Pages scripts with local dev versions",
+	"version": "0.1.1",
+	"description": "Enhanced Power Pages pro code developer experience.",
 	"permissions": [
 		"storage",
 		"debugger",

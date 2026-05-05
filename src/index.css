@@ -1,5 +1,16 @@
 @import "tailwindcss";
-@import "@fontsource/barlow";
+@import "@fontsource/barlow/latin-200";
+@import "@fontsource/barlow/latin-400";
+@import "@fontsource/barlow/latin-600";
+@import "@fontsource/barlow/latin-200-italic";
+@import "@fontsource/barlow/latin-400-italic";
+@import "@fontsource/barlow/latin-600-italic";
+@import "@fontsource/barlow/latin-ext-200";
+@import "@fontsource/barlow/latin-ext-400";
+@import "@fontsource/barlow/latin-ext-600";
+@import "@fontsource/barlow/latin-ext-200-italic";
+@import "@fontsource/barlow/latin-ext-400-italic";
+@import "@fontsource/barlow/latin-ext-600-italic";
 
 @theme {
 	--font-barlow: "Barlow", sans-serif;

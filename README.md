@@ -1,4 +1,4 @@
-[![Publish to Chrome Web Store](https://github.com/itera-fredrikstad/powpow-interceptor/actions/workflows/publish-chrome.yml/badge.svg?branch=main)](https://github.com/itera-fredrikstad/powpow-interceptor/actions/workflows/publish-chrome.yml)
+[![CI](https://github.com/itera-fredrikstad/powpow-interceptor/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/itera-fredrikstad/powpow-interceptor/actions/workflows/ci.yml)
 
 # PowPow Interceptor
 
