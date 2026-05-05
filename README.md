@@ -27,48 +27,12 @@ PowPow Interceptor uses the Chrome DevTools Protocol (`chrome.debugger`) to inte
 
 ## Installation
 
-### From the Chrome Web Store
+Download the latest `powpow-interceptor-vX.X.X.zip` from the [Releases page](https://github.com/itera-fredrikstad/powpow-interceptor/releases), then:
 
-> Coming soon — the extension is published via a GitHub Actions workflow on release.
-
-### Manual / Development Install
-
-1. **Clone the repo**
-
-   ```bash
-   git clone https://github.com/itera-fredrikstad/powpow-interceptor.git
-   cd powpow-interceptor
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   pnpm install
-   ```
-
-3. **Build the extension**
-
-   ```bash
-   pnpm build
-   ```
-
-   This compiles TypeScript, runs Biome lint checks, and outputs the extension to `dist/`.
-
-4. **Load in Chrome**
-
-   - Navigate to `chrome://extensions`
-   - Enable **Developer mode**
-   - Click **Load unpacked** and select the `dist/` directory
-
-### Development Mode
-
-Run the Vite build in watch mode for rapid iteration:
-
-```bash
-pnpm dev
-```
-
-After each rebuild, click the refresh icon on the extension card in `chrome://extensions` to reload.
+1. Unzip the archive
+2. Navigate to `chrome://extensions`
+3. Enable **Developer mode**
+4. Click **Load unpacked** and select the unzipped folder
 
 ## Usage
 
@@ -103,15 +67,40 @@ After each rebuild, click the refresh icon on the extension card in `chrome://ex
 | `tabs` | Query open tabs to auto-attach the debugger to matching portals |
 | `http://localhost/*` | Fetch the manifest and file contents from the local PowPow CLI dev server |
 
-## Tech Stack
+---
 
-- **React 19** + **TypeScript** — Popup UI
-- **Tailwind CSS v4** — Styling
-- **Vite 8** — Build tooling (with Rolldown)
-- **Biome** — Lint & format
-- **Chrome Extension Manifest V3** — Service worker background script
+## Contributing
 
-## Scripts
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v24+)
+- [pnpm](https://pnpm.io/)
+
+### Setup
+
+```bash
+git clone https://github.com/itera-fredrikstad/powpow-interceptor.git
+cd powpow-interceptor
+pnpm install
+```
+
+### Development workflow
+
+Run Vite in watch mode — the extension is rebuilt on every file save:
+
+```bash
+pnpm dev
+```
+
+Load the extension in Chrome:
+
+1. Navigate to `chrome://extensions`
+2. Enable **Developer mode**
+3. Click **Load unpacked** and select the `dist/` directory
+
+After each rebuild, click the refresh icon on the extension card in `chrome://extensions` to reload.
+
+### Scripts
 
 | Script | Description |
 | --- | --- |
@@ -121,9 +110,25 @@ After each rebuild, click the refresh icon on the extension card in `chrome://ex
 | `pnpm check` | Run Biome checks |
 | `pnpm fix` | Auto-fix lint and format issues |
 
-## CI/CD
+### Tech Stack
 
-A [GitHub Actions workflow](.github/workflows/publish-chrome.yml) automatically publishes the extension to the Chrome Web Store when a GitHub release is created. The version in `manifest.json` is set from the release tag.
+- **React 19** + **TypeScript** — Popup UI
+- **Tailwind CSS v4** — Styling
+- **Vite 8** — Build tooling (with Rolldown)
+- **Biome** — Lint & format
+- **Chrome Extension Manifest V3** — Service worker background script
+
+### Versioning
+
+`package.json` is the single source of truth for the version number. `public/manifest.json` must be kept in sync — the CI workflow fails if they differ. To cut a release, bump both files to the same version and push to `main`; the workflow will build, zip `dist/`, and create a GitHub release automatically.
+
+### CI
+
+The [CI workflow](.github/workflows/ci.yml) runs on every push to `main`. It:
+
+1. Verifies `package.json` and `public/manifest.json` versions match
+2. Runs `pnpm build` (TypeScript + Biome lint + Vite)
+3. If the version in `package.json` is newer than the latest GitHub release, creates a new release with the built extension attached as a ZIP
 
 ## Related
 

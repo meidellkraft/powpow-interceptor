@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "statusMessage": "Checking if docs need updating...",
+            "command": "MODIFIED=$(git status --porcelain 2>/dev/null | awk '{print $2}' | grep -vE '^(README|CHANGELOG|ROADMAP|CLAUDE)\\.md$' || true); has_match() { echo \"$MODIFIED\" | grep -qE \"$1\" 2>/dev/null; }; PARTS=\"\"; if has_match '^src/' || has_match '^vite\\.config\\.'; then PARTS='Source code changed — consider updating README.md and/or CHANGELOG.md.'; fi; if has_match '^\\.github/'; then PARTS=\"${PARTS:+$PARTS }CI changed — consider updating CLAUDE.md and/or README.md.\"; fi; if has_match '^package\\.json$' || has_match '^public/manifest\\.json$'; then PARTS=\"${PARTS:+$PARTS }Version or config changed — consider updating CHANGELOG.md.\"; fi; if [ -n \"$PARTS\" ]; then printf '{\"systemMessage\": \"📋 Doc reminder: %s\"}' \"$PARTS\"; fi"
+          }
+        ]
+      }
+    ]
+  }
+}

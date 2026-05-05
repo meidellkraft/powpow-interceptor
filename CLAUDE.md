@@ -53,6 +53,16 @@ React 19 + Tailwind CSS v4 popup shown when clicking the extension icon.
 - `Manifest`, `ManifestWebFile`, `ManifestWebTemplate` — Dev server manifest shape
 - `ManifestLoadState` — Enum: ServerUnreachable (-1), NotLoaded (0), Loading (1), Loaded (2)
 
+## CI/CD
+
+The workflow at `.github/workflows/ci.yml` runs on every push to `main`. It:
+
+1. Fails if `package.json` and `public/manifest.json` versions don't match
+2. Runs `pnpm build`
+3. If the version in `package.json` is newer than the latest GitHub release, zips `dist/` and creates a new release with the ZIP attached
+
+`package.json` is the version source of truth. Always keep `public/manifest.json` in sync when bumping the version.
+
 ## Loading the Extension for Development
 
 1. Run `pnpm dev` (or `pnpm build:dev`)
